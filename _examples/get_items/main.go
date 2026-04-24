@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	creatorsapi "github.com/milan-stojanov-toptal/creators-api"
-	"github.com/milan-stojanov-toptal/creators-api/api"
+	creatorsapi "github.com/milan-mageclass/go-creators-api"
+	"github.com/milan-mageclass/go-creators-api/api"
 )
 
 func main() {

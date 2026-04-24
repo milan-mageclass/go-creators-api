@@ -1,4 +1,4 @@
-# creators-api
+# go-creators-api
 
 A small Go client for the Amazon Creators API.
 
@@ -41,7 +41,7 @@ Creators API uses lower camel case for request fields and resource names. For ex
 ## Install
 
 ```bash
-go get github.com/milan-stojanov-toptal/creators-api
+go get github.com/milan-mageclass/go-creators-api
 ```
 
 ## Basic setup

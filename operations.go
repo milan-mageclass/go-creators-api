@@ -3,7 +3,7 @@ package creatorsapi
 import (
 	"context"
 
-	"github.com/milan-stojanov-toptal/creators-api/api"
+	"github.com/milan-mageclass/go-creators-api/api"
 )
 
 func (c *Client) GetItems(ctx context.Context, params *api.GetItemsParams) (*api.GetItemsResponse, error) {

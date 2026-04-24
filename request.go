@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/milan-stojanov-toptal/creators-api/api"
+	"github.com/milan-mageclass/go-creators-api/api"
 )
 
 const catalogEndpoint = "https://creatorsapi.amazon/catalog/v1"
