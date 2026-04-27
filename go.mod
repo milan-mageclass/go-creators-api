@@ -1,3 +1,3 @@
 module github.com/milan-mageclass/go-creators-api
 
-go 1.26
+go 1.24
