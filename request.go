@@ -68,7 +68,11 @@ func (c *Client) executeOperation(ctx context.Context, operation api.Operation, 
 	}
 
 	if resp.StatusCode >= http.StatusBadRequest {
-		return fmt.Errorf("request failed: %s", string(respBody))
+		return &APIError{
+			StatusCode: resp.StatusCode,
+			Errors:     apiErrorsFromResponse(v),
+			Body:       append([]byte(nil), respBody...),
+		}
 	}
 
 	return nil
