@@ -59,12 +59,19 @@ func (c *Client) fetchAccessToken(ctx context.Context) (string, time.Time, error
 		return "", time.Time{}, err
 	}
 
+	if resp.StatusCode >= http.StatusBadRequest {
+		return "", time.Time{}, &HTTPError{
+			StatusCode: resp.StatusCode,
+			Body:       append([]byte(nil), body...),
+		}
+	}
+
 	var parsed tokenResponse
 	if err := json.Unmarshal(body, &parsed); err != nil {
 		return "", time.Time{}, fmt.Errorf("invalid token response: %w", err)
 	}
-	if resp.StatusCode >= http.StatusBadRequest || parsed.AccessToken == "" {
-		return "", time.Time{}, fmt.Errorf("token request failed: %s", string(body))
+	if parsed.AccessToken == "" {
+		return "", time.Time{}, fmt.Errorf("token response missing access token")
 	}
 
 	expiresIn := time.Hour

@@ -63,16 +63,17 @@ func (c *Client) executeOperation(ctx context.Context, operation api.Operation, 
 		return err
 	}
 
-	if err := json.Unmarshal(respBody, v); err != nil {
-		return fmt.Errorf("invalid response: %w", err)
-	}
-
 	if resp.StatusCode >= http.StatusBadRequest {
+		_ = json.Unmarshal(respBody, v)
 		return &APIError{
 			StatusCode: resp.StatusCode,
 			Errors:     apiErrorsFromResponse(v),
 			Body:       append([]byte(nil), respBody...),
 		}
+	}
+
+	if err := json.Unmarshal(respBody, v); err != nil {
+		return fmt.Errorf("invalid response: %w", err)
 	}
 
 	return nil
