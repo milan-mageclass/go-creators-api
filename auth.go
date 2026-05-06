@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
@@ -25,6 +26,19 @@ func tokenEndpoint(version string) (string, error) {
 		return "https://creatorsapi.auth.eu-south-2.amazoncognito.com/oauth2/token", nil
 	case "2.3":
 		return "https://creatorsapi.auth.us-west-2.amazoncognito.com/oauth2/token", nil
+	case "3.1":
+		return "https://api.amazon.com/auth/o2/token", nil
+	default:
+		return "", fmt.Errorf("unsupported credential version %q", version)
+	}
+}
+
+func tokenScope(version string) (string, error) {
+	switch {
+	case strings.HasPrefix(version, "2."):
+		return creatorsScopeV2, nil
+	case strings.HasPrefix(version, "3."):
+		return creatorsScopeV3, nil
 	default:
 		return "", fmt.Errorf("unsupported credential version %q", version)
 	}
@@ -35,12 +49,16 @@ func (c *Client) fetchAccessToken(ctx context.Context) (string, time.Time, error
 	if err != nil {
 		return "", time.Time{}, err
 	}
+	scope, err := tokenScope(c.credentialVersion)
+	if err != nil {
+		return "", time.Time{}, err
+	}
 
 	form := url.Values{}
 	form.Set("grant_type", "client_credentials")
 	form.Set("client_id", c.credentialID)
 	form.Set("client_secret", c.credentialSecret)
-	form.Set("scope", defaultTokenScope)
+	form.Set("scope", scope)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewBufferString(form.Encode()))
 	if err != nil {

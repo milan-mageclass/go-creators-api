@@ -22,7 +22,7 @@ func main() {
 	}
 
 	response, err := client.GetItems(context.Background(), &api.GetItemsParams{
-		ItemIDs: []string{"B00MNV8E0C"},
+		ItemIDs: []string{"B01LW3WCIS"},
 		Resources: []api.Resource{
 			api.BrowseNodeInfoBrowseNodes,
 			api.BrowseNodeInfoBrowseNodesAncestor,
@@ -60,8 +60,9 @@ func main() {
 			api.ParentASIN,
 		},
 	})
+
 	if err != nil {
-		panic(err)
+		fmt.Println("err:", err)
 	}
 
 	for _, item := range response.ItemsResult.Items {

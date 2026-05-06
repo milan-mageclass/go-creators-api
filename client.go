@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	defaultTokenScope = "creatorsapi/default"
+	creatorsScopeV2   = "creatorsapi/default"
+	creatorsScopeV3   = "creatorsapi::default"
 	tokenExpirySkew   = time.Minute
 	tokenRetryBackoff = 5 * time.Second
 )
