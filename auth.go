@@ -28,6 +28,10 @@ func tokenEndpoint(version string) (string, error) {
 		return "https://creatorsapi.auth.us-west-2.amazoncognito.com/oauth2/token", nil
 	case "3.1":
 		return "https://api.amazon.com/auth/o2/token", nil
+	case "3.2":
+		return "https://api.amazon.co.uk/auth/o2/token", nil
+	case "3.3":
+		return "https://api.amazon.co.jp/auth/o2/token", nil
 	default:
 		return "", fmt.Errorf("unsupported credential version %q", version)
 	}
@@ -54,17 +58,34 @@ func (c *Client) fetchAccessToken(ctx context.Context) (string, time.Time, error
 		return "", time.Time{}, err
 	}
 
-	form := url.Values{}
-	form.Set("grant_type", "client_credentials")
-	form.Set("client_id", c.credentialID)
-	form.Set("client_secret", c.credentialSecret)
-	form.Set("scope", scope)
+	var requestBody io.Reader
+	contentType := "application/x-www-form-urlencoded"
+	if strings.HasPrefix(c.credentialVersion, "3.") {
+		bodyBytes, err := json.Marshal(map[string]string{
+			"grant_type":    "client_credentials",
+			"client_id":     c.credentialID,
+			"client_secret": c.credentialSecret,
+			"scope":         scope,
+		})
+		if err != nil {
+			return "", time.Time{}, err
+		}
+		requestBody = bytes.NewReader(bodyBytes)
+		contentType = "application/json"
+	} else {
+		form := url.Values{}
+		form.Set("grant_type", "client_credentials")
+		form.Set("client_id", c.credentialID)
+		form.Set("client_secret", c.credentialSecret)
+		form.Set("scope", scope)
+		requestBody = strings.NewReader(form.Encode())
+	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewBufferString(form.Encode()))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, requestBody)
 	if err != nil {
 		return "", time.Time{}, err
 	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", contentType)
 
 	resp, err := c.httpClientSnapshot().Do(req)
 	if err != nil {

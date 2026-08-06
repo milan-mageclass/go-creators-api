@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/milan-mageclass/go-creators-api/api"
 )
@@ -48,7 +49,11 @@ func (c *Client) executeOperation(ctx context.Context, operation api.Operation, 
 	if err != nil {
 		return err
 	}
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s, Version %s", token, c.credentialVersion))
+	authorization := fmt.Sprintf("Bearer %s", token)
+	if !strings.HasPrefix(c.credentialVersion, "3.") {
+		authorization += fmt.Sprintf(", Version %s", c.credentialVersion)
+	}
+	req.Header.Set("Authorization", authorization)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-marketplace", c.marketplace)
 
