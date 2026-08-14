@@ -10,6 +10,30 @@ type ItemsResult struct {
 	Items []Item `json:"items,omitempty"`
 }
 
+type SearchResult struct {
+	Items             []Item                  `json:"items,omitempty"`
+	SearchRefinements SearchRefinementsResult `json:"searchRefinements,omitempty"`
+	SearchURL         string                  `json:"searchURL,omitempty"`
+	TotalResultCount  int                     `json:"totalResultCount,omitempty"`
+}
+
+type SearchRefinementsResult struct {
+	SearchIndex      Refinement   `json:"searchIndex,omitempty"`
+	BrowseNode       Refinement   `json:"browseNode,omitempty"`
+	OtherRefinements []Refinement `json:"otherRefinements,omitempty"`
+}
+
+type Refinement struct {
+	ID          string          `json:"id,omitempty"`
+	DisplayName string          `json:"displayName,omitempty"`
+	Bins        []RefinementBin `json:"bins,omitempty"`
+}
+
+type RefinementBin struct {
+	ID          string `json:"id,omitempty"`
+	DisplayName string `json:"displayName,omitempty"`
+}
+
 type VariationsResult struct {
 	Items            []Item           `json:"items,omitempty"`
 	VariationSummary VariationSummary `json:"variationSummary,omitempty"`

@@ -21,3 +21,11 @@ func (c *Client) GetVariations(ctx context.Context, params *api.GetVariationsPar
 	}
 	return &response, nil
 }
+
+func (c *Client) SearchItems(ctx context.Context, params *api.SearchItemsParams) (*api.SearchItemsResponse, error) {
+	response := api.SearchItemsResponse{}
+	if err := c.executeOperation(ctx, api.OperationSearchItems, params, &response); err != nil {
+		return &response, err
+	}
+	return &response, nil
+}

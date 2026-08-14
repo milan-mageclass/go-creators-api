@@ -62,6 +62,8 @@ func apiErrorsFromResponse(v any) []api.Error {
 		return append([]api.Error(nil), resp.Errors...)
 	case *api.GetVariationsResponse:
 		return append([]api.Error(nil), resp.Errors...)
+	case *api.SearchItemsResponse:
+		return append([]api.Error(nil), resp.Errors...)
 	default:
 		return nil
 	}
